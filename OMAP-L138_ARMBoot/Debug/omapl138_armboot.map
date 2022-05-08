@@ -1,0 +1,243 @@
+******************************************************************************
+                  TI ARM Linker PC v16.9.6                     
+******************************************************************************
+>> Linked Wed May 04 21:38:21 2022
+
+OUTPUT FILE NAME:   <omapl138_armboot.out>
+ENTRY POINT SYMBOL: "_c_int00"  address: 800025a0
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  SHRAM                 80000000   00020000  00002ea0  0001d160  RWIX
+  DDR2                  c0000000   08000000  00000000  08000000  RWIX
+  ARMRAM                ffff0000   00002000  00000000  00002000  RWIX
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+80000000    80000000    00002000   00000000    rw-
+  80000000    80000000    00001000   00000000    rw- .fiq_stack
+  80001000    80001000    00001000   00000000    rw- .irq_stack
+80002000    80002000    00000640   00000640    r-x
+  80002000    80002000    000005a0   000005a0    r-x .text
+  800025a0    800025a0    000000a0   000000a0    r-x .c_int00
+80002640    80002640    00000818   00000000    rw-
+  80002640    80002640    00000018   00000000    rw- .data
+  80002658    80002658    00000800   00000000    rw- .stack
+80002e58    80002e58    00000048   00000048    r--
+  80002e58    80002e58    00000048   00000048    r-- .cinit
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.fiq_stack 
+*          0    80000000    00001000     UNINITIALIZED
+                  80000000    00001000     boot.obj (.fiq_stack)
+
+.irq_stack 
+*          0    80001000    00001000     UNINITIALIZED
+                  80001000    00001000     boot.obj (.irq_stack)
+
+.text      0    80002000    000005a0     
+                  80002000    00000180     rtsv5_A_le_eabi.lib : memcpy32.obj (.text)
+                  80002180    000000b0     main.obj (.text)
+                  80002230    000000b0     rtsv5_A_le_eabi.lib : memset32.obj (.text)
+                  800022e0    000000a0                         : autoinit.obj (.text)
+                  80002380    0000009c                         : copy_decompress_lzss.obj (.text:decompress:lzss)
+                  8000241c    00000090                         : exit.obj (.text)
+                  800024ac    00000088                         : cpy_tbl.obj (.text)
+                  80002534    00000024                         : _lock.obj (.text)
+                  80002558    00000020                         : args_main.obj (.text)
+                  80002578    00000014                         : copy_decompress_none.obj (.text:decompress:none)
+                  8000258c    00000010                         : copy_zero_init.obj (.text:decompress:ZI)
+                  8000259c    00000004                         : startup.obj (.text)
+
+.c_int00   0    800025a0    000000a0     
+                  800025a0    000000a0     boot.obj (.c_int00)
+
+.data      0    80002640    00000018     UNINITIALIZED
+                  80002640    0000000c     rtsv5_A_le_eabi.lib : exit.obj (.data:$O1$$)
+                  8000264c    00000008                         : _lock.obj (.data:$O1$$)
+                  80002654    00000004                         : stkdepth_vars.obj (.data)
+
+.stack     0    80002658    00000800     UNINITIALIZED
+                  80002658    00000800     --HOLE--
+
+.cinit     0    80002e58    00000048     
+                  80002e58    00000013     (.cinit..data.load) [load image, compression = lzss]
+                  80002e6b    00000001     --HOLE-- [fill = 0]
+                  80002e6c    0000000c     (__TI_handler_table)
+                  80002e78    00000008     (.cinit..fiq_stack.load) [load image, compression = zero_init]
+                  80002e80    00000008     (.cinit..irq_stack.load) [load image, compression = zero_init]
+                  80002e88    00000018     (__TI_cinit_table)
+
+MODULE SUMMARY
+
+       Module                     code   ro data   rw data
+       ------                     ----   -------   -------
+    .\
+       boot.obj                   160    0         8192   
+       main.obj                   176    0         0      
+    +--+--------------------------+------+---------+---------+
+       Total:                     336    0         8192   
+                                                          
+    C:\ti\ccsv7\tools\compiler\ti-cgt-arm_16.9.6.LTS\lib\rtsv5_A_le_eabi.lib
+       memcpy32.obj               384    0         0      
+       memset32.obj               176    0         0      
+       autoinit.obj               160    0         0      
+       copy_decompress_lzss.obj   156    0         0      
+       exit.obj                   144    0         12     
+       cpy_tbl.obj                136    0         0      
+       _lock.obj                  36     0         8      
+       args_main.obj              32     0         0      
+       copy_decompress_none.obj   20     0         0      
+       copy_zero_init.obj         16     0         0      
+       startup.obj                4      0         0      
+       stkdepth_vars.obj          0      0         4      
+    +--+--------------------------+------+---------+---------+
+       Total:                     1264   0         24     
+                                                          
+       Stack:                     0      0         2048   
+       Linker Generated:          0      71        0      
+    +--+--------------------------+------+---------+---------+
+       Grand Total:               1600   71        10264  
+
+
+LINKER GENERATED COPY TABLES
+
+__TI_cinit_table @ 80002e88 records: 3, size/record: 8, table size: 24
+	.data: load addr=80002e58, load size=00000013 bytes, run addr=80002640, run size=00000018 bytes, compression=lzss
+	.fiq_stack: load addr=80002e78, load size=00000008 bytes, run addr=80000000, run size=00001000 bytes, compression=zero_init
+	.irq_stack: load addr=80002e80, load size=00000008 bytes, run addr=80001000, run size=00001000 bytes, compression=zero_init
+
+
+LINKER GENERATED HANDLER TABLE
+
+__TI_handler_table @ 80002e6c records: 3, size/record: 4, table size: 12
+	index: 0, handler: __TI_zero_init
+	index: 1, handler: __TI_decompress_lzss
+	index: 2, handler: __TI_decompress_none
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                           
+-------   ----                           
+8000241c  C$$EXIT                        
+0001f000  IRAMSize                       
+80001000  IRAMStart                      
+UNDEFED   SHT$$INIT_ARRAY$$Base          
+UNDEFED   SHT$$INIT_ARRAY$$Limit         
+80020000  STACKStart                     
+80002e58  __STACK_END                    
+00000800  __STACK_SIZE                   
+80002e88  __TI_CINIT_Base                
+80002ea0  __TI_CINIT_Limit               
+80002e6c  __TI_Handler_Table_Base        
+80002e78  __TI_Handler_Table_Limit       
+800022e0  __TI_auto_init                 
+80002640  __TI_cleanup_ptr               
+80002380  __TI_decompress_lzss           
+80002578  __TI_decompress_none           
+80002644  __TI_dtors_ptr                 
+80002648  __TI_enable_exit_profile_output
+ffffffff  __TI_pprof_out_hndl            
+ffffffff  __TI_prof_data_size            
+ffffffff  __TI_prof_data_start           
+80002e58  __TI_static_base__             
+8000258c  __TI_zero_init                 
+80002230  __aeabi_memclr                 
+80002230  __aeabi_memclr4                
+80002230  __aeabi_memclr8                
+80002000  __aeabi_memcpy                 
+80002000  __aeabi_memcpy4                
+80002000  __aeabi_memcpy8                
+80002234  __aeabi_memset                 
+80002234  __aeabi_memset4                
+80002234  __aeabi_memset8                
+ffffffff  __binit__                      
+ffffffff  __c_args__                     
+80002658  __stack                        
+80002558  _args_main                     
+800025a0  _c_int00                       
+8000264c  _lock                          
+8000254c  _nop                           
+80002540  _register_lock                 
+80002534  _register_unlock               
+8000259c  _system_post_cinit             
+80002650  _unlock                        
+80002424  abort                          
+ffffffff  binit                          
+800024ac  copy_in                        
+80002430  exit                           
+80002180  main                           
+80002654  main_func_sp                   
+80002000  memcpy                         
+80002240  memset                         
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                           
+-------   ----                           
+00000800  __STACK_SIZE                   
+0001f000  IRAMSize                       
+80001000  IRAMStart                      
+80002000  __aeabi_memcpy                 
+80002000  __aeabi_memcpy4                
+80002000  __aeabi_memcpy8                
+80002000  memcpy                         
+80002180  main                           
+80002230  __aeabi_memclr                 
+80002230  __aeabi_memclr4                
+80002230  __aeabi_memclr8                
+80002234  __aeabi_memset                 
+80002234  __aeabi_memset4                
+80002234  __aeabi_memset8                
+80002240  memset                         
+800022e0  __TI_auto_init                 
+80002380  __TI_decompress_lzss           
+8000241c  C$$EXIT                        
+80002424  abort                          
+80002430  exit                           
+800024ac  copy_in                        
+80002534  _register_unlock               
+80002540  _register_lock                 
+8000254c  _nop                           
+80002558  _args_main                     
+80002578  __TI_decompress_none           
+8000258c  __TI_zero_init                 
+8000259c  _system_post_cinit             
+800025a0  _c_int00                       
+80002640  __TI_cleanup_ptr               
+80002644  __TI_dtors_ptr                 
+80002648  __TI_enable_exit_profile_output
+8000264c  _lock                          
+80002650  _unlock                        
+80002654  main_func_sp                   
+80002658  __stack                        
+80002e58  __STACK_END                    
+80002e58  __TI_static_base__             
+80002e6c  __TI_Handler_Table_Base        
+80002e78  __TI_Handler_Table_Limit       
+80002e88  __TI_CINIT_Base                
+80002ea0  __TI_CINIT_Limit               
+80020000  STACKStart                     
+ffffffff  __TI_pprof_out_hndl            
+ffffffff  __TI_prof_data_size            
+ffffffff  __TI_prof_data_start           
+ffffffff  __binit__                      
+ffffffff  __c_args__                     
+ffffffff  binit                          
+UNDEFED   SHT$$INIT_ARRAY$$Base          
+UNDEFED   SHT$$INIT_ARRAY$$Limit         
+
+[51 symbols]
