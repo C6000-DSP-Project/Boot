@@ -421,7 +421,7 @@ Uint32 SPI_MEM_eraseBytes(SPI_MEM_InfoHandle hSPIMemInfo, Uint32 startAddr, Uint
         
         while (currBlockAddr <= endBlockAddr)
         {
-          DEBUG_printString( "Doing block erase.\r\n");
+//          DEBUG_printString( "\r Doing block erase.");
           LOCAL_SPIFlash_blockErase(hSPIMemInfo, eepromAddr);
           bytesLeft -= hSPIMemInfo->hMemParams->blockSize;
           eepromAddr += hSPIMemInfo->hMemParams->blockSize;
@@ -430,6 +430,7 @@ Uint32 SPI_MEM_eraseBytes(SPI_MEM_InfoHandle hSPIMemInfo, Uint32 startAddr, Uint
         return E_PASS;
       }
     }
+    DEBUG_printString( "\r\n");
     
     // Do sector erase if appropriate
     if (hSPIMemInfo->hMemParams->sectorSize != 0)

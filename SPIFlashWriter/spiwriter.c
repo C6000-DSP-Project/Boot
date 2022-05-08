@@ -117,7 +117,7 @@ void main( void )
   // System init
   if (DEVICE_init() !=E_PASS)
   {
-    exit();
+      for(;;);
   }
 
   // Execute the SPI flashing
@@ -161,26 +161,26 @@ static Uint32 LOCAL_spiwriter()
     return E_FAIL;
   }
   
-  DEBUG_printString("Will you be writing a UBL image? (Y or y) \r\n");
-  DEBUG_readString(fileName);
-  fflush(stdin);
-
-  if ((strcmp(fileName,"y") == 0) || (strcmp(fileName,"Y") == 0))
-  {
-    // Read the AIS file from host
-    DEBUG_printString("Enter the binary AIS UBL file name (enter 'none' to skip): \r\n");
-    DEBUG_readString(fileName);
-    fflush(stdin);
-    
-    LOCAL_GetAndWriteFileData(hSpiMemInfo, fileName, baseAddress, FALSE);
-    
-    // Assume that the UBL will fit in the first block of the SPI flash
-    baseAddress += hSpiMemInfo->hMemParams->blockSize;
-    useHeaderForApp = TRUE;
-  }
+//  DEBUG_printString("Will you be writing a UBL image? (Y or y) \r\n");
+//  DEBUG_readString(fileName);
+//  fflush(stdin);
+//
+//  if ((strcmp(fileName,"y") == 0) || (strcmp(fileName,"Y") == 0))
+//  {
+//    // Read the AIS file from host
+//    DEBUG_printString("Enter the binary AIS UBL file name (enter 'none' to skip): \r\n");
+//    DEBUG_readString(fileName);
+//    fflush(stdin);
+//
+//    LOCAL_GetAndWriteFileData(hSpiMemInfo, fileName, baseAddress, FALSE);
+//
+//    // Assume that the UBL will fit in the first block of the SPI flash
+//    baseAddress += hSpiMemInfo->hMemParams->blockSize;
+//    useHeaderForApp = TRUE;
+//  }
 
   // Read the AIS file from host
-  DEBUG_printString("Enter the application file name (enter 'none' to skip): \r\n");
+  DEBUG_printString("Enter the application file name: \r\n");
   DEBUG_readString(fileName);
   fflush(stdin);
   
@@ -232,22 +232,23 @@ static Uint32 LOCAL_GetAndWriteFileData(SPI_MEM_InfoHandle hSpiMemInfo, String f
     {
       DEBUG_printString("\tERROR: File too big.. Closing program.\r\n");
       fclose (fPtr);
-      exit(0);
+      for(;;);
     }
 
     // Setup pointer in RAM
-    appPtr = (Uint8 *) UTIL_allocMem(fileSize);
-
-    fseek(fPtr,0,SEEK_SET);
-
-    if (fileSize != fread(appPtr, 1, fileSize, fPtr))
-    {
-      DEBUG_printString("\tWARNING: File Size mismatch.\r\n");
-    }
-
-    fclose (fPtr);
-    
-    DEBUG_printString("\tINFO: File read complete.\r\n");
+    appPtr = (Uint8 *)0xC4000000;
+//    appPtr = (Uint8 *) UTIL_allocMem(fileSize);
+//
+//    fseek(fPtr,0,SEEK_SET);
+//
+//    if (fileSize != fread(appPtr, 1, fileSize, fPtr))
+//    {
+//      DEBUG_printString("\tWARNING: File Size mismatch.\r\n");
+//    }
+//
+//    fclose (fPtr);
+//
+//    DEBUG_printString("\tINFO: File read complete.\r\n");
     
     if (useHeader)
     {
@@ -273,6 +274,7 @@ static Uint32 LOCAL_GetAndWriteFileData(SPI_MEM_InfoHandle hSpiMemInfo, String f
     appPtr2 = (Uint8 *) UTIL_allocMem(fileSize);
 
     // Erase the SPI flash to accomodate the file size
+    DEBUG_printString("Erasing...\r\n");
     if (SPI_MEM_eraseBytes( hSpiMemInfo, destAddr, fileSize ) != E_PASS)
     {
       DEBUG_printString("\tERROR: Erasing SPI failed.\r\n");
@@ -290,6 +292,7 @@ static Uint32 LOCAL_GetAndWriteFileData(SPI_MEM_InfoHandle hSpiMemInfo, String f
     memcpy(appPtr2, appPtr, fileSize);
 
     // Write the application data to the flash (note that writes are destructive)
+    DEBUG_printString("Writing...\r\n");
     if (SPI_MEM_writeBytes( hSpiMemInfo, destAddr, fileSize, appPtr) != E_PASS)
     {
       DEBUG_printString("\tERROR: Writing SPI failed.\r\n");
@@ -297,6 +300,7 @@ static Uint32 LOCAL_GetAndWriteFileData(SPI_MEM_InfoHandle hSpiMemInfo, String f
     }
 
     // Verify the memory contents 
+    DEBUG_printString("Verifying...\r\n");
     if (SPI_MEM_verifyBytes(hSpiMemInfo, destAddr, fileSize, appPtr2, appPtr) != E_PASS)
     {
       DEBUG_printString("\tERROR: Verifying SPI data failed.\r\n");
